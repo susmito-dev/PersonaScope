@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PersonaScope - আপনার ভিতরের Sigma, Alpha, এবং Beta বৈশিষ্ট্যগুলো আবিষ্কার করুন</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Noto Sans Bengali', sans-serif;
+        }
+
+        :root {
+            --bg: #0f1724;
+            --card: #0b1220;
+            --muted: #94a3b8;
+            --accent: #7c3aed;
+            --accent-light: #8b5cf6;
+            --text: #e6eef8;
+            --gradient-start: #7c3aed;
+            --gradient-end: #2563eb;
+        }
+
+        body {
+            background: linear-gradient(180deg, #071029 0%, #071226 100%);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            padding: 30px 0;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            position: relative;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%237c3aed" fill-opacity="0.1" d="M0,128L48,117.3C96,107,192,85,288,112C384,139,480,213,576,224C672,235,768,181,864,165.3C960,149,1056,171,1152,165.3C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') bottom no-repeat;
+            background-size: cover;
+        }
+
+        .intro {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            color: var(--muted);
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .intro-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        /* Instructions Section */
+        .instructions {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: var(--text);
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(124, 58, 237, 0.2);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        .card-content {
+            color: var(--muted);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 80px 0;
+            background: rgba(123, 58, 237, 0.05);
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-description {
+            font-size: 1.2rem;
+            color: var(--muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(123, 58, 237, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(123, 58, 237, 0.6);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(123, 58, 237, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(123, 58, 237, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(123, 58, 237, 0);
+            }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--muted);
+            background: var(--card);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .tagline {
+                font-size: 1rem;
+                padding: 0 20px;
+            }
+
+            .hero {
+                padding: 50px 0;
+            }
+
+            .intro {
+                font-size: 1rem;
+                padding: 15px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-title {
+                font-size: 2rem;
+            }
+
+            .cta-description {
+                font-size: 1rem;
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <h1 class="logo">PersonaScope</h1>
+            <p class="tagline">আপনার ভিতরের Sigma, Alpha, এবং Beta বৈশিষ্ট্যগুলো আবিষ্কার করুন</p>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="intro">
+                <i class="fas fa-user-circle intro-icon"></i>
+                <p>স্বাগতম PersonaScope এ!নিজেকে জানো, নিজের Sigma, Alpha, Beta খুঁজো।এটি প্রতিযোগিতা নয়—শুধু মজা, খোঁজ, এবং নিজের ব্যক্তিত্বের রহস্য উন্মোচনের যাত্রা!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instructions Section -->
+    <section class="instructions">
+        <div class="container">
+            <h2 class="section-title">কিভাবে কাজ করে</h2>
+
+            <div class="cards">
+                <div class="card">
+                    <i class="fas fa-question-circle card-icon"></i>
+                    <h3 class="card-title">প্রশ্ন সমাধান করুন</h3>
+                    <p class="card-content">১০০টি মজার multiple-choice প্রশ্নের উত্তর দিয়ে নিজের ব্যক্তিত্ব আবিষ্কার করুন। প্রতিটি বিকল্প (A, B, C) শুধু তোমার পছন্দকে প্রকাশ করবে।</p>
+                </div>
+
+                <div class="card">
+                    <i class="fas fa-chart-pie card-icon"></i>
+                    <h3 class="card-title">ফলাফল দেখা</h3>
+                    <p class="card-content">সব প্রশ্নের উত্তর দেওয়ার পরে JSON ফাইল ডাউনলোড করুন। চাইলে copy করে ChatGPT বা অন্য AI তে paste করেও analysis পেতে পারেন।</p>
+                </div>
+
+                <div class="card">
+                    <i class="fas fa-smile card-icon"></i>
+                    <h3 class="card-title">মজার টিপস</h3>
+                    <p class="card-content">কোন ভুল উত্তর নেই। নিজের স্বাভাবিক প্রতিক্রিয়া অনুযায়ী উত্তর দাও। মনে করো
+                        এটা শুধু নিজের সম্পর্কে জানতে এবং মজা করার জন্য।</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">তোমার ব্যক্তিত্ব আবিষ্কার শুরু কর</h2>
+            <p class="cta-description">মাত্র ১০০টি প্রশ্নের উত্তর দিয়ে জানুন আপনি Sigma, Alpha নাকি Beta ব্যক্তিত্বের
+                অধিকারী</p>
+            <a href="quiz.html" class="cta-button" id="startButton">শুরু করুন</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>Powered by PersonaScope</p>
+            <p>© 2025 PersonaScope. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple animation for cards on scroll
+        document.addEventListener('DOMContentLoaded', function () {
+            const cards = document.querySelectorAll('.card');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach(card => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(50px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+
+</html>

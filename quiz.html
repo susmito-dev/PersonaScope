@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PersonaScope — ব্যক্তিত্ব বিশ্লেষণ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        :root {
+            --bg: #0f1724;
+            --card: #0b1220;
+            --muted: #94a3b8;
+            --accent: #7c3aed;
+            --accent-light: #8b5cf6;
+            --glass: rgba(255, 255, 255, 0.04);
+            --text: #e6eef8;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Inter", "Noto Sans Bengali", sans-serif;
+            background: linear-gradient(180deg, #071029 0%, #071226 100%);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #2563eb);
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 12px;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .tagline {
+            color: var(--muted);
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto 25px;
+            font-weight: 300;
+        }
+
+        .username-section {
+            background: var(--glass);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid rgba(124, 58, 237, 0.1);
+        }
+
+        .username-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .username-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+        }
+
+        .progress-container {
+            margin-bottom: 25px;
+            background: var(--glass);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #2563eb);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+            color: var(--muted);
+        }
+
+        .questions-container {
+            margin-bottom: 30px;
+        }
+
+        .question-card {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            scroll-margin-top: 20px;
+        }
+
+        .question-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .question-number {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 18px;
+            background: rgba(124, 58, 237, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .question-text {
+            font-size: 19px;
+            margin-bottom: 18px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .options-container {
+            margin-bottom: 20px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 14px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .option input[type="checkbox"] {
+            margin-top: 4px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 16px;
+        }
+
+        .question-note-container {
+            margin-top: 20px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+
+        .question-note-label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .question-note {
+            width: 100%;
+            padding: 14px;
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 15px;
+            resize: vertical;
+            min-height: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .question-note:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 25px;
+            background: var(--glass);
+            border-radius: 12px;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background: var(--accent-light);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn.ghost {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn.ghost:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 极 6px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            border: none;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            background: var(--accent-light);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--muted);
+            font-size: 14px;
+            padding: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .brand {
+            font-size: 16px;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .privacy {
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        .copyright {
+            font-size: 13px;
+            opacity: 0.7;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            header {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .tagline {
+                font-size: 16px;
+            }
+
+            .logo {
+                font-size: 42px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .question-card {
+                padding: 18px;
+            }
+
+            .question-text {
+                font-size: 17px;
+            }
+
+            .scroll-top {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo">Σ</div>
+                <div>
+                    <h1>PersonaScope — ব্যক্তিত্ব বিশ্লেষণ</h1>
+                    <p class="tagline">
+                        আপনার ব্যক্তিত্ব বিশ্লেষণ করুন ১০০টি প্রশ্নের মাধ্যমে
+                    </p>
+                </div>
+            </div>
+
+            <div class="username-section">
+                <label for="username">আপনার নাম লিখুন:</label>
+                <input type="text" id="username" class="username-input" placeholder="আপনার নাম" required />
+            </div>
+        </header>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span>অগ্রগতি:</span>
+                <span id="progressText">0% সম্পূর্ণ (0/100 প্রশ্ন)</span>
+            </div>
+        </div>
+
+        <div class="questions-container" id="questionsContainer">
+            <!-- Questions will be dynamically inserted here -->
+        </div>
+
+        <div class="controls">
+            <button id="exportJson" class="btn">
+                <i class="fas fa-file-export"></i> JSON এক্সপোর্ট করুন
+            </button>
+            <button id="copyJsonBtn" class="btn ghost">
+                <i class="fas fa-copy"></i> JSON কপি করুন
+            </button>
+        </div>
+
+        <div class="scroll-top" id="scrollTop">
+            <i class="fas fa-arrow-up"></i>
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <div class="brand">Powered by PersonaScope</div>
+
+                <div class="privacy">
+                    তোমার ব্যক্তিগত উত্তরগুলো শুধুমাত্র তোমার analysis এর জন্য ব্যবহার
+                    করা হবে। কোনো ব্যক্তিগত তথ্য অন্য কোথাও শেয়ার করা হবে না।
+                </div>
+
+                <div class="copyright">© 2025 PersonaScope. All rights reserved.</div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // AI প্রম্পট
+        const AI_PROMPT = `You are a comprehensive personality analysis AI. A user has completed a 100-question multiple-choice test. Each question has options A, B, C, randomly assigned with no fixed personality meaning. Your task is to provide a complete personality analysis in three integrated layers: logical reasoning, empathetic summary, and creative storytelling.
+
+1. **Logical Reasoning**  
+   - For each question:
+     - Present the question number and content.
+     - State the chosen answer (A, B, or C).
+     - Analyze how this answer reflects Sigma, Alpha, or Beta traits, providing clear reasoning for each assessment.  
+   - At the end, calculate and present the overall percentages for Sigma, Alpha, and Beta traits across all questions.  
+   - Reasoning should be thorough, methodical, and based solely on the answers without assumptions. Avoid summarizing results until percentages are presented.
+
+2. **Empathetic Summary**  
+   - Based on the calculated Sigma, Alpha, and Beta scores, write a human-friendly, caring summary of the user's personality.  
+   - Explain their tendencies, strengths, and overall traits in a supportive tone.  
+   - Make it easy to understand, engaging, and reassuring, avoiding technical jargon or step-by-step reasoning.  
+   - Example: "Your scores suggest that you are a natural leader, gifted at connecting with others and thriving in social situations, while also being thoughtful and introspective."
+
+3. **Creative Storytelling**  
+   - Transform the user's Sigma, Alpha, and Beta scores into a short, vivid, and engaging narrative.  
+   - Use metaphors, relatable scenarios, humor, or storytelling to illustrate their personality traits in a memorable way.  
+   - Ensure the narrative remains accurate to the analysis and resonates with the user's unique traits.  
+   - Example: "Imagine a charismatic leader standing at the helm of a ship, guiding their crew through turbulent waters, embodying the Sigma spirit with independence and resilience."
+
+**Output Format:**  
+- Begin with the reasoning layer, showing question-level analysis and percentages.  
+- Follow immediately with the empathetic summary.  
+- End with the creative storytelling section.  
+- Ensure the full response flows naturally like a cohesive report, readable and engaging, without rigid JSON formatting.
+
+Be thorough, caring, and creative. The final output should make the user feel understood, engaged, and inspired by their personality.`;
+
+        // প্রশ্ন ডেটা 
+        const QUESTIONS = [
+            "নতুন জায়গায় গেলে তুমি কী করো?",
+            "ক্লাসে হঠাৎ প্রশ্ন পেলে তুমি কী করো?",
+            "বন্ধুরা আড্ডা দেয়, তখন তুমি কী করো?",
+            "টিমে কাজ করতে গেলে তুমি কীভাবে আচরণ করো?",
+            "বিপদ ঘটলে তোমার প্রতিক্রিয়া কী?",
+            "ভিড়ের মধ্যে গেলে তুমি কেমন অনুভব করো?",
+            "গ্রুপ ছবি তোলার সময় তুমি কোথায় থাকো?",
+            "বন্ধুরা ঝগড়া করলে তুমি কী করো?",
+            "হঠাৎ নতুন সুযোগ এলে তুমি কী করো?",
+            "একা সময় কাটানোর পদ্ধতি কী?",
+            "বন্ধুরা কথা না শুনলে তুমি কী করো?",
+            "নতুন দক্ষতা শিখতে হলে তুমি কী করো?",
+            "সবার সামনে কথা বললে তোমার প্রতিক্রিয়া কী?",
+            "পার্টিতে গেলে তুমি কী করো?",
+            "কেউ বাজে ব্যবহার করলে তুমি কী করো?",
+            "নতুন শিক্ষার্থী এলে তুমি কী করো?",
+            "গ্রুপ প্রকল্পে কাজ করলে তুমি কী ভূমিকা নাও?",
+            "নিয়ম মানার ব্যাপারে তুমি কীভাবে আচরণ করো?",
+            "খেলায় ক্যাপ্টেন হওয়া প্রয়োজন হলে তুমি কী করো?",
+            "সমস্যার মুখোমুখি হলে তুমি কী করো?",
+            "নতুন জায়গায় খেতে গেলে তুমি কী করো?",
+            "হঠাৎ কেউ দোষারোপ করলে তুমি কী করো?",
+            "গ্রুপ ভ্রমণে গেলে তুমি কী করো?",
+            "পরীক্ষার আগে তুমি কীভাবে প্রস্তুতি নাও?",
+            "ভুল করলে তুমি কী করো?",
+            "বন্ধুরা ডাকে, তুমি কী করো?",
+            "প্রথম কথা বলার সময় তুমি কী করো?",
+            "ভিড়ের মধ্যে গান হলে তুমি কী করো?",
+            "নতুন মোবাইল কেনার সময় তুমি কী করো?",
+            "বন্ধুরা ঝগড়া মেটাতে বললে তুমি কী করো?",
+            "খারাপ মার্ক পেলে তুমি কী করো?",
+            "ক্লাসে নেতা হলে তুমি কী করো?",
+            "নতুন কিছু কেনার সময় তুমি কী করো?",
+            "একা থাকলে তুমি কী করো?",
+            "বন্ধুরা দেরি করলে তুমি কী করো?",
+            "আইডিয়া বাতিল হলে তুমি কী করো?",
+            "খেলাধুলায় তুমি কীভাবে অংশগ্রহণ করো?",
+            "কেউ তোমাকে নেতা বানালে তুমি কী করো?",
+            "তোমার পছন্দের কাজ করলে তুমি কী করো?",
+            "রাস্তায় দুর্ঘটনা দেখলে তুমি কী করো?",
+            "গ্রুপ চ্যাটে তুমি কী করো?",
+            "নতুন আইডিয়া শেয়ার করার সময় তুমি কী করো?",
+            "তোমার জিনিস হারালে তুমি কী করো?",
+            "গেম খেললে তুমি কীভাবে খেলো?",
+            "কেউ তোমাকে নির্দেশ দিলে তুমি কী করো?",
+            "চলচ্চিত্র দেখতে গেলে তুমি কী করো?",
+            "বন্ধুরা তোমাকে নেতা ডাকলে তুমি কী করো?",
+            "সমালোচনা বা পর্যালোচনা পেলে তুমি কী করো?",
+            "কাজ শেষ হলে তুমি কী করো?",
+            "গ্রুপ উপস্থাপনায় তুমি কীভাবে অংশগ্রহণ করো?",
+            "তোমার ইচ্ছা পূরণ না হলে তুমি কী করো?",
+            "ভিড়ের মধ্যে গান গাইতে পারলে তুমি কী করো?",
+            "কেউ তোমার আইডিয়া চুরি করলে তুমি কী করো?",
+            "মতামত দিতে গেলে তুমি কী করো?",
+            "নতুন জায়গায় বসতে গেলে তুমি কোথায় বসো?",
+            "বন্ধু মন খারাপ করলে তুমি কী করো?",
+            "চ্যালেঞ্জ পেলে তুমি কী করো?",
+            "তোমার গোপন তথ্য থাকলে তুমি কী করো?",
+            "মতবিরোধ হলে তুমি কী করো?",
+            "নতুন যন্ত্রপাতিতে আগ্রহ থাকলে তুমি কী করো?",
+            "বন্ধুর সাফল্যে তুমি কী করো?",
+            "হঠাৎ চাকরির প্রস্তাব এলে তুমি কী করো?",
+            "বিতর্কে গেলে তুমি কী করো?",
+            "তোমার স্বপ্ন পূরণ হলে তুমি কী করো?",
+            "নতুন প্রযুক্তি এলে তুমি কী করো?",
+            "কেউ দোষারোপ করলে তুমি কী করো?",
+            "বন্ধুর পরামর্শ পেলে তুমি কী করো?",
+            "পরিকল্পনা ব্যর্থ হলে তুমি কী করো?",
+            "পার্টি আয়োজনের সময় তুমি কী করো?",
+            "ভবিষ্যৎ পরিকল্পনা করার সময় তুমি কী করো?",
+            "কেউ ভুল বললে তুমি কী করো?",
+            "কাজ শেষ হলে পুরস্কার পেলে তুমি কী করো?",
+            "পরীক্ষার পরে তুমি কী করো?",
+            "তোমার শখ করলে তুমি কী করো?",
+            "অজানা ফোন পেলে তুমি কী করো?",
+            "নতুন বন্ধু বানালে তুমি কী করো?",
+            "তুমি দেরি করলে তুমি কী করো?",
+            "সাফল্যে প্রতিক্রিয়া দিলে তুমি কী করো?",
+            "ক্লাসে বোরিং হলে তুমি কী করো?",
+            "বন্ধুদের গ্রুপে তুমি কীভাবে আচরণ করো?",
+            "তোমার ধরন কেমন?",
+            "প্রতিক্রিয়া দিলে তুমি কী করো?",
+            "তোমার চিন্তা করার ধরন কেমন?",
+            "ঝুঁকি নেওয়া প্রয়োজন হলে তুমি কী করো?",
+            "কথা বলার ধরন কেমন?",
+            "কাজ করার ধরন কী?",
+            "অনুভূতি প্রকাশ করলে তুমি কী করো?",
+            "স্বপ্ন পূরণ হলে তুমি কী করো?",
+            "লক্ষ্য নির্ধারণ করলে তুমি কী করো?",
+            "চাপ পড়লে তুমি কী করো?",
+            "সম্পর্কে তুমি কীভাবে আচরণ করো?",
+            "সিদ্ধান্ত নিলে তুমি কী করো?",
+            "সমস্যা হলে তুমি কী করো?",
+            "তোমার কথা না মানলে তুমি কী করো?",
+            "প্রেরণা দেওয়ার সময় তুমি কী করো?",
+            "দুর্বলতা প্রকাশ করলে তুমি কী করো?",
+            "পরিকল্পনা করলে তুমি কী করো?",
+            "সমস্যা আলোচনা করলে তুমি কী করো?",
+            "অন্যের কথা শুনলে তুমি কী করো?",
+            "সবার উপেক্ষা করলে তুমি কী করো?"
+        ];
+
+
+        // অপশন ডেটা
+        const OPTIONS = [
+            ["A) সবার সাথে পরিচয় করি", "B) চুপচাপ পর্যবেক্ষণ করি", "C) এক-দুজনের সাথে মিশে যাই"],
+            ["A) সাথে সাথে উত্তর দিই", "B) চেষ্টা করি কিন্তু ভয় পাই", "C) চুপ করে থাকি, পরে খুঁজি"],
+            ["A) গল্প চালাই", "B) সবাই যা বলে তাতেই হাসি", "C) শুনি, মাঝেমধ্যে বলি"],
+            ["A) আমি লিডার হব", "B) আমি অন্যের সাথে কাজ করব", "C) আমি আলাদা নিজের মত করব"],
+            ["A) সাহস দেখাই", "B) অন্যকে ডাকি", "C) চুপচাপ নিজে সামলাই"],
+            ["A) আনন্দ উপভোগ করি", "B) চাপ লাগে", "C) দূর থেকে দেখি"],
+            ["A) মাঝে দাঁড়াই", "B) যেখানে জায়গা পাই দাঁড়াই", "C) পেছনে থাকি"],
+            ["A) সমাধান করি", "B) এড়িয়ে যাই", "C) চুপচাপ দেখি"],
+            ["A) ঝাঁপিয়ে পড়ি", "B) অন্যদের জিজ্ঞেস করি", "C) ভেবে নিই"],
+            ["A) বিরক্ত লাগে", "B) একটু লাগে", "C) খুব ভালো লাগে"],
+            ["A) জোর দিয়ে বোঝাই", "B) রাগ করি না", "C) আর বলি না"],
+            ["A) সাথে সাথে শুরু করি", "B) ধীরে ধীরে করি", "C) নিজের গোপনে করি"],
+            ["A) মজা পাই", "B) নার্ভাস লাগে", "C) দরকার হলে করি"],
+            ["A) সবাইকে নিয়ন্ত্রণ করি", "B) পাশে বসি", "C) একা কোণায় থাকি"],
+            ["A) সাথে সাথে জবাব দিই", "B) চুপ থাকি", "C) একদিন ফিরিয়ে দিই"],
+            ["A) আগে গিয়ে কথা বলি", "B) বন্ধুর সাথে পাঠাই", "C) সে নিজে আসলে বলি"],
+            ["A) আমি ভাগ করে দিই", "B) আমাকে যা দেয় করি", "C) আলাদা নিজের কাজ করি"],
+            ["A) কখনো ভাঙি", "B) সব মানি", "C) দরকার হলে মানি"],
+            ["A) আমি হব", "B) অন্যকে দিই", "C) খেলি কিন্তু লিড করি না"],
+            ["A) সমাধান খুঁজি", "B) সাহায্য চাই", "C) একা লড়ি"],
+            ["A) নতুন কিছু চেষ্টা করি", "B) সবাই যা নেয় তাই নেই", "C) আগেই পড়ে নিই মেনু"],
+            ["A) জবাব দিই", "B) চুপ থাকি", "C) মনে মনে ভাবি"],
+            ["A) পরিকল্পনা করি", "B) যেটা বলে তাতে যাই", "C) নিজের মত চলি"],
+            ["A) আত্মবিশ্বাসী থাকি", "B) ভয় লাগে", "C) শান্ত থাকি"],
+            ["A) ঠিক করি সাথে সাথে", "B) অন্যকে বলি", "C) চুপচাপ সামলাই"],
+            ["A) আগে যাই", "B) সবার সাথে যাই", "C) মেজাজ অনুযায়ী যাই"],
+            ["A) আমি শুরু করি", "B) অপেক্ষা করি", "C) ছোট উত্তর দিই"],
+            ["A) গান গাই", "B) তালি দিই", "C) দেখি শুধু"],
+            ["A) সবাইকে বলি", "B) জিজ্ঞেস করি", "C) নিজে খোঁজি"],
+            ["A) সমাধান করি", "B) নিরপেক্ষ থাকি", "C) বলি “আমায় দিও না”"],
+            ["A) পরের বার বেশি পড়ি", "B) মন খারাপ করি", "C) চুপচাপ থাকি"],
+            ["A) নিয়ম বানাই", "B) সবাইকে শুনি", "C) শুধু নিজের কাজ করি"],
+            ["A) সবাইকে দেখাই", "B) পরিবারকে দেখাই", "C) একা ব্যবহার করি"],
+            ["A) গান চালাই", "B) টিভি দেখি", "C) বই পড়ি"],
+            ["A) অভিযোগ করি", "B) কিছু বলি না", "C) অন্য কাজ করি"],
+            ["A) আবার বুঝাই", "B) মেনে নেই", "C) পরে প্রমাণ করি"],
+            ["A) প্রতিযোগিতা করি", "B) আনন্দ করি", "C) নিজের জন্য খেলি"],
+            ["A) গ্রহণ করি", "B) বলি “আরেকজন নাও”", "C) করি কিন্তু অতিরিক্ত কথা বলি না"],
+            ["A) মানুষকে নেতৃত্ব দেই", "B) বন্ধুদের সাথে থাকি", "C) একা কাজ করি"],
+            ["A) সাহায্য করি", "B) অন্যকে ডাকি", "C) দূরে দাঁড়াই"],
+            ["A) আলোচনা চালাই", "B) মিম পাঠাই", "C) শুধু পড়ি"],
+            ["A) সবাইকে বলি", "B) বন্ধুকে বলি", "C) একা চেষ্টা করি"],
+            ["A) খুঁজে বের করি", "B) সাহায্য চাই", "C) অন্য কিছু ব্যবহার করি"],
+            ["A) জিততেই হবে", "B) খেলায় আনন্দ পাই", "C) অনুসন্ধান করি"],
+            ["A) মানি না", "B) মানি", "C) চুপচাপ করি"],
+            ["A) গ্রুপে যাই", "B) বন্ধুর সাথে যাই", "C) একা যেতেও পারি"],
+            ["A) খুশি হই", "B) ভয়ে যাই", "C) শান্ত থাকি"],
+            ["A) রক্ষা করি", "B) চুপ থাকি", "C) পরে উন্নতি করি"],
+            ["A) সবাইকে বলি", "B) চুপচাপ বসি", "C) নিজের মনে খুশি হই"],
+            ["A) আমি শুরু করি", "B) অন্যকে দিই", "C) আমার অংশ টুকু করি"],
+            ["A) জেদ করি", "B) মেনে নিই", "C) অপেক্ষা করি"],
+            ["A) অবশ্যই", "B) ভয় লাগে", "C) মেজাজ অনুযায়ী করি"],
+            ["A) প্রতিবাদ করি", "B) চুপ থাকি", "C) পরে প্রমাণ করি"],
+            ["A) জোরে বলি", "B) ধীরে বলি", "C) দরকার হলে বলি"],
+            ["A) সামনে বসি", "B) মাঝখানে বসি", "C) পেছনে বসি"],
+            ["A) সান্ত্বনা দিই", "B) সঙ্গে থাকি", "C) কিছু না বলি"],
+            ["A) গ্রহণ করি", "B) এড়িয়ে চলি", "C) পরে চেষ্টা করি"],
+            ["A) সবার সাথে ভাগ করি", "B) বন্ধুর সাথে বলি", "C) একা রাখি"],
+            ["A) বিতর্ক করি", "B) সমঝোতা করি", "C) চুপ থাকি"],
+            ["A) সবাইকে উৎসাহিত করি", "B) শুনে খুশি হই", "C) একা জানি"],
+            ["A) তালি দিই", "B) সমর্থন করি", "C) চুপচাপ শ্রদ্ধা করি"],
+            ["A) গ্রহণ করি", "B) আলোচনা করি", "C) গবেষণা করি"],
+            ["A) জিততে চাই", "B) শুধু যাই", "C) শুধু শুনি"],
+            ["A) সবাইকে বলি", "B) পরিবারকে বলি", "C) একা খুশি হই"],
+            ["A) ব্যবহার করি", "B) সময় নিয়ে শিখি", "C) একা শিখি"],
+            ["A) রক্ষা করি", "B) চুপ থাকি", "C) উপেক্ষা করি"],
+            ["A) মানি না", "B) বিবেচনা করি", "C) পরে ভেবে দেখি"],
+            ["A) আবার চেষ্টা করি", "B) হতাশ হই", "C) অন্য পরিকল্পনা করি"],
+            ["A) সংগঠিত করি", "B) সাহায্য করি", "C) চুপচাপ উপভোগ করি"],
+            ["A) বড় ভাবি", "B) পরিবারে নির্ভর করি", "C) নিজের মতো ভাবি"],
+            ["A) প্রতিবাদ করি", "B) মেনে নিই", "C) পরে প্রমাণ করি"],
+            ["A) চাই", "B) চাই না", "C) নিজের খুশির পুরস্কার"],
+            ["A) সবাইকে জিজ্ঞেস করি", "B) ফলাফলের অপেক্ষা করি", "C) চুপচাপ থাকি"],
+            ["A) সাহসিকতা করি", "B) বন্ধুর সাথে দেখা করি", "C) একা অনুসন্ধান করি"],
+            ["A) সাথে সাথে", "B) ভয় ভয় করে", "C) না ধরলেও চলে"],
+            ["A) নেতৃত্ব দেই", "B) সঙ্গে মিশি", "C) দূর থেকে শ্রদ্ধা করি"],
+            ["A) ক্ষমা চাই", "B) দুঃখ প্রকাশ করি", "C) কিছু বলি না"],
+            ["A) সবাইকে প্রেরণা দেই", "B) উদযাপন করি", "C) নিজে খুশি হই"],
+            ["A) মজা করি", "B) বসে থাকি", "C) নিজের চিন্তা করি"],
+            ["A) নেতা", "B) সহযোগী", "C) নীরব"],
+            ["A) সাহসী", "B) স্বাভাবিক", "C) সহজ"],
+            ["A) প্রকাশ করি", "B) নরমভাবে দিই", "C) না দিলে ভালো"],
+            ["A) বড়", "B) উপস্থিত", "C) গভীর"],
+            ["A) সবসময়", "B) মাঝে মাঝে", "C) সতর্ক"],
+            ["A) জোরে", "B) নরম", "C) সংক্ষেপে"],
+            ["A) দ্রুত", "B) স্থিরভাবে", "C) নিজের মতো"],
+            ["A) দেখাই", "B) চাপা রাখি", "C) ভিতরে রাখি"],
+            ["A) বড় কিছু", "B) সাধারণ জীবন", "C) স্বাধীন থাকা"],
+            ["A) সবাইকে দেখানো", "B) নিজের জন্য", "C) সবার থেকে আলাদা"],
+            ["A) সামলাই", "B) ভেঙে যাই", "C) উপেক্ষা করি"],
+            ["A) প্রভাব বিস্তার করি", "B) অনুসরণ করি", "C) স্বাধীন থাকি"],
+            ["A) সাথে সাথে", "B) পরিবারের পরামর্শ নেই", "C) একা ভেবে করি"],
+            ["A) মোকাবিলা করি", "B) সাহায্য চাই", "C) উপেক্ষা করি"],
+            ["A) জোর করি", "B) ছেড়ে দিই", "C) আর চেষ্টা করি না"],
+            ["A) সবসময়", "B) মাঝে মাঝে", "C) না"],
+            ["A) স্বীকার করি", "B) লুকাই", "C) নিজে সামলাই"],
+            ["A) আগে থেকে", "B) সাথে সাথে", "C) মেজাজ অনুযায়ী"],
+            ["A) সবাইকে বলি", "B) বন্ধুকে বলি", "C) একা থাকি"],
+            ["A) না", "B) হ্যাঁ", "C) দরকার হলে"],
+            ["A) পাত্তা দিই না", "B) খারাপ লাগে", "C) মনে মনে হাসি"]
+        ];
+
+        // DOM elements
+        const questionsContainer = document.getElementById("questionsContainer");
+        const progressFill = document.getElementById("progressFill");
+        const progressText = document.getElementById("progressText");
+        const exportJsonBtn = document.getElementById("exportJson");
+        const copyJsonBtn = document.getElementById("copyJsonBtn");
+        const scrollTopBtn = document.getElementById("scrollTop");
+        const usernameInput = document.getElementById("username");
+
+        // প্রশ্ন রেন্ডার করুন
+        function renderQuestions() {
+            questionsContainer.innerHTML = "";
+
+            QUESTIONS.forEach((question, index) => {
+                const questionEl = document.createElement("div");
+                questionEl.className = "question-card";
+                questionEl.id = `question-${index}`;
+                questionEl.innerHTML = `
+          <div class="question-header">
+            <div class="question-number">প্রশ্ন ${index + 1}</div>
+          </div>
+          <div class="question-text">${question}</div>
+          <div class="options-container">
+            <div class="option">
+              <input type="checkbox" id="q${index}a" name="q${index}" data-q="${index}" data-opt="A">
+              <label for="q${index}a">${OPTIONS[index][0]}</label>
+            </div>
+            
+            <div class="option">
+              <input type="checkbox" id="q${index}b" name="q${index}" data-q="${index}" data-opt="B">
+              <label for="q${index}b">${OPTIONS[index][1]}</label>
+            </div>
+            
+            <div class="option">
+              <input type="checkbox" id="q${index}c" name="q${index}" data-q="${index}" data-opt="C">
+              <label for="q${index}c">${OPTIONS[index][2]}</label>
+            </div>
+          </div>
+          
+          <div class="question-note-container">
+            <label class="question-note-label" for="note${index}">এই প্রশ্ন সম্পর্কে আপনার নোট:</label>
+            <textarea class="question-note" id="note${index}" data-q="${index}" placeholder="আপনার চিন্তা, ব্যাখ্যা বা অতিরিক্ত তথ্য এখানে লিখুন..."></textarea>
+          </div>
+        `;
+
+                questionsContainer.appendChild(questionEl);
+            });
+
+            attachEventListeners();
+            updateOverallProgress();
+            observeElements();
+        }
+
+        // Scroll observation for animations
+        function observeElements() {
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("visible");
+                        }
+                    });
+                },
+                { threshold: 0.1 }
+            );
+
+            document.querySelectorAll(".question-card").forEach((el) => {
+                observer.observe(el);
+            });
+        }
+
+        // ইভেন্ট লিসেনার সংযুক্ত করুন
+        function attachEventListeners() {
+            // চেকবক্স পরিবর্তন
+            document
+                .querySelectorAll('input[type="checkbox"]')
+                .forEach((checkbox) => {
+                    checkbox.addEventListener("change", function () {
+                        updateOverallProgress();
+                    });
+                });
+
+            // নোট ইনপুট
+            document.querySelectorAll(".question-note").forEach((note) => {
+                note.addEventListener("input", function () {
+                    updateOverallProgress();
+                });
+            });
+
+            // Scroll to top button
+            scrollTopBtn.addEventListener("click", () => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+
+            // Show/hide scroll to top button based on scroll position
+            window.addEventListener("scroll", () => {
+                if (window.scrollY > 300) {
+                    scrollTopBtn.classList.add("visible");
+                } else {
+                    scrollTopBtn.classList.remove("visible");
+                }
+            });
+        }
+
+        // সামগ্রিক প্রগতি আপডেট করুন
+        function updateOverallProgress() {
+            let completed = 0;
+
+            QUESTIONS.forEach((_, index) => {
+                let hasSelection = false;
+                let hasNote = false;
+
+                // Check if any option is selected
+                ["a", "b", "c"].forEach((option) => {
+                    const checkbox = document.getElementById(`q${index}${option}`);
+                    if (checkbox.checked) hasSelection = true;
+                });
+
+                // Check if note has content
+                const note = document.getElementById(`note${index}`);
+                if (note.value.trim().length > 0) hasNote = true;
+
+                if (hasSelection || hasNote) completed++;
+            });
+
+            const percentage = Math.round((completed / QUESTIONS.length) * 100);
+            progressFill.style.width = `${percentage}%`;
+            progressText.textContent = `${percentage}% সম্পূর্ণ (${completed}/${QUESTIONS.length} প্রশ্ন)`;
+        }
+
+        // উত্তর সংগ্রহ করুন
+        function collectAnswers() {
+            const answers = [];
+
+            QUESTIONS.forEach((question, index) => {
+                const answer = {
+                    id: index + 1,
+                    question: question,
+                    answers: [],
+                    note: document.getElementById(`note${index}`).value.trim(),
+                };
+
+                // Collect selected options
+                ["A", "B", "C"].forEach((option) => {
+                    const checkbox = document.getElementById(
+                        `q${index}${option.toLowerCase()}`
+                    );
+                    if (checkbox.checked) {
+                        answer.answers.push({
+                            option: option,
+                            text: checkbox.nextElementSibling.textContent,
+                        });
+                    }
+                });
+
+                answers.push(answer);
+            });
+
+            return answers;
+        }
+
+        // JSON হিসেবে এক্সপোর্ট করুন
+        function exportToJson() {
+            const answers = collectAnswers();
+            const username = usernameInput.value.trim() || "Anonymous";
+            const date = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
+
+            const data = {
+                username: username,
+                date: date,
+                answers: answers,
+                aiPrompt: AI_PROMPT,
+            };
+
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataUri =
+                "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+
+            const exportFileDefaultName = `PersonaScope_Result_${username}_${date}.json`;
+
+            const linkElement = document.createElement("a");
+            linkElement.setAttribute("href", dataUri);
+            linkElement.setAttribute("download", exportFileDefaultName);
+            linkElement.click();
+        }
+
+        // JSON কপি করুন
+        function copyJsonToClipboard() {
+            const answers = collectAnswers();
+            const username = usernameInput.value.trim() || "Anonymous";
+            const date = new Date().toISOString().split("T")[0];
+
+            const data = {
+                username: username,
+                date: date,
+                answers: answers,
+                aiPrompt: AI_PROMPT,
+            };
+
+            const text = JSON.stringify(data, null, 2);
+
+            navigator.clipboard
+                .writeText(text)
+                .then(() => {
+                    alert("JSON ডেটা ক্লিপবোর্ডে কপি করা হয়েছে!");
+                })
+                .catch((err) => {
+                    alert("কপি করতে সমস্যা হয়েছে: " + err);
+                });
+        }
+
+        // ইভেন্ট লিসেনার সেট আপ করুন
+        exportJsonBtn.addEventListener("click", exportToJson);
+        copyJsonBtn.addEventListener("click", copyJsonToClipboard);
+
+        // ইনিশিয়ালাইজেশন
+        renderQuestions();
+    </script>
+</body>
+
+</html>
