@@ -2,10 +2,11 @@
 <html lang="bn">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PersonaScope — ব্যক্তিত্ব বিশ্লেষণ</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>Σ</text></svg>">
     <style>
         :root {
             --bg: #0f1724;
@@ -320,7 +321,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 极 6px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
             z-index: 1000;
             opacity: 0;
@@ -336,6 +337,148 @@
         .scroll-top:hover {
             transform: translateY(-5px);
             background: var(--accent-light);
+        }
+
+        /* Feedback Form Styles */
+        .feedback-section {
+            background: var(--glass);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .feedback-section h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--accent);
+        }
+
+        /* হেডার স্টাইল */
+        #quiz-header,
+        #feedback-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #quiz-header::before,
+        #feedback-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #2563eb);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .feedback-form {
+            background: var(--glass);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .description {
+            color: var(--muted);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: var(--glass);
+            border-radius: 12px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
         }
 
         footer {
@@ -428,19 +571,41 @@
                 width: 50px;
                 height: 50px;
             }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-tab {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            #quiz-header,
+            #feedback-header {
+                padding: 20px 15px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <header>
+
+        <header id="quiz-header">
             <div class="logo-container">
                 <div class="logo">Σ</div>
                 <div>
                     <h1>PersonaScope — ব্যক্তিত্ব বিশ্লেষণ</h1>
                     <p class="tagline">
-                        আপনার ব্যক্তিত্ব বিশ্লেষণ করুন ১০০টি প্রশ্নের মাধ্যমে
+                        আপনার ব্যক্তিত্ব বিশ্লেষণ করুন ১০০টি প্রশ্নের মাধ্যমে এবং আপনার মতামত জানান
                     </p>
                 </div>
             </div>
@@ -451,27 +616,64 @@
             </div>
         </header>
 
-        <div class="progress-container">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
+        <!-- ফিডব্যাকের জন্য নতুন হেডার (শুরুতে লুকানো) -->
+        <header id="feedback-header" style="display: none;">
+            <div class="logo-container">
+                <div class="logo">Σ</div>
+                <div>
+                    <h1>PersonaScope — ফিডব্যাক</h1>
+                    <p class="tagline">
+                        আপনার মূল্যবান মতামত আমাদের সাথে শেয়ার করুন
+                    </p>
+                </div>
             </div>
-            <div class="progress-text">
-                <span>অগ্রগতি:</span>
-                <span id="progressText">0% সম্পূর্ণ (0/100 প্রশ্ন)</span>
+        </header>
+
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-target="test-section">ব্যক্তিত্ব পরীক্ষা</div>
+            <div class="nav-tab" data-target="feedback-section">ফিডব্যাক দিন</div>
+        </div>
+
+        <div id="test-section" class="section active">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">
+                    <span>অগ্রগতি:</span>
+                    <span id="progressText">0% সম্পূর্ণ (0/100 প্রশ্ন)</span>
+                </div>
+            </div>
+
+            <div class="questions-container" id="questionsContainer">
+                <!-- Questions will be dynamically inserted here -->
+            </div>
+
+            <div class="controls">
+                <button id="exportJson" class="btn">
+                    <i class="fas fa-file-export"></i> JSON এক্সপোর্ট করুন
+                </button>
+                <button id="copyJsonBtn" class="btn ghost">
+                    <i class="fas fa-copy"></i> JSON কপি করুন
+                </button>
             </div>
         </div>
 
-        <div class="questions-container" id="questionsContainer">
-            <!-- Questions will be dynamically inserted here -->
-        </div>
-
-        <div class="controls">
-            <button id="exportJson" class="btn">
-                <i class="fas fa-file-export"></i> JSON এক্সপোর্ট করুন
-            </button>
-            <button id="copyJsonBtn" class="btn ghost">
-                <i class="fas fa-copy"></i> JSON কপি করুন
-            </button>
+        <div id="feedback-section" class="section">
+            <div class="feedback-form">
+                <h2>আপনার ফিডব্যাক শেয়ার করুন</h2>
+                <p class="description">
+                    Google Form ব্যবহার করে আপনার ফিডব্যাক শেয়ার করুন। ফিডব্যাক ফর্মে যেতে নিচের বাটনে ক্লিক করুন।
+                </p>
+                
+                <a href="https://forms.gle/kok216WJt6nAW71a6" target="_blank" class="btn">
+                    <i class="fas fa-external-link-alt"></i> Google Form এ যান
+                </a>
+                
+                <p class="description" style="margin-top: 20px; font-size: 14px;">
+                    ফিডব্যাক জমা দেওয়ার পর এই পেজে ফিরে আসুন।
+                </p>
+            </div>
         </div>
 
         <div class="scroll-top" id="scrollTop">
@@ -528,7 +730,7 @@ Be thorough, caring, and creative. The final output should make the user feel un
         const QUESTIONS = [
             "নতুন জায়গায় গেলে তুমি কী করো?",
             "ক্লাসে হঠাৎ প্রশ্ন পেলে তুমি কী করো?",
-            "বন্ধুরা আড্ডা দেয়, তখন তুমি কী করো?",
+            "বন্ধুরা आড্ডা দেয়, তখন তুমি কী করো?",
             "টিমে কাজ করতে গেলে তুমি কীভাবে আচরণ করো?",
             "বিপদ ঘটলে তোমার প্রতিক্রিয়া কী?",
             "ভিড়ের মধ্যে গেলে তুমি কেমন অনুভব করো?",
@@ -540,24 +742,24 @@ Be thorough, caring, and creative. The final output should make the user feel un
             "নতুন দক্ষতা শিখতে হলে তুমি কী করো?",
             "সবার সামনে কথা বললে তোমার প্রতিক্রিয়া কী?",
             "পার্টিতে গেলে তুমি কী করো?",
-            "কেউ বাজে ব্যবহার করলে তুমি কী করো?",
+            "কেউ বাজে ব্যবহার করলে তुमি কী করো?",
             "নতুন শিক্ষার্থী এলে তুমি কী করো?",
             "গ্রুপ প্রকল্পে কাজ করলে তুমি কী ভূমিকা নাও?",
             "নিয়ম মানার ব্যাপারে তুমি কীভাবে আচরণ করো?",
             "খেলায় ক্যাপ্টেন হওয়া প্রয়োজন হলে তুমি কী করো?",
             "সমস্যার মুখোমুখি হলে তুমি কী করো?",
-            "নতুন জায়গায় খেতে গেলে তুমি কী করো?",
+            "নতুন জায়গায় খেতে গেলে তুমি কী करো?",
             "হঠাৎ কেউ দোষারোপ করলে তুমি কী করো?",
             "গ্রুপ ভ্রমণে গেলে তুমি কী করো?",
             "পরীক্ষার আগে তুমি কীভাবে প্রস্তুতি নাও?",
             "ভুল করলে তুমি কী করো?",
             "বন্ধুরা ডাকে, তুমি কী করো?",
-            "প্রথম কথা বলার সময় তুমি কী করো?",
+            "প্রথম কথা বলার সময় тумি কী করো?",
             "ভিড়ের মধ্যে গান হলে তুমি কী করো?",
             "নতুন মোবাইল কেনার সময় তুমি কী করো?",
             "বন্ধুরা ঝগড়া মেটাতে বললে তুমি কী করো?",
             "খারাপ মার্ক পেলে তুমি কী করো?",
-            "ক্লাসে নেতা হলে তুমি কী করো?",
+            "क्लাসে नेता হলে तুমি কী করো?",
             "নতুন কিছু কেনার সময় তুমি কী করো?",
             "একা থাকলে তুমি কী করো?",
             "বন্ধুরা দেরি করলে তুমি কী করো?",
@@ -578,7 +780,7 @@ Be thorough, caring, and creative. The final output should make the user feel un
             "গ্রুপ উপস্থাপনায় তুমি কীভাবে অংশগ্রহণ করো?",
             "তোমার ইচ্ছা পূরণ না হলে তুমি কী করো?",
             "ভিড়ের মধ্যে গান গাইতে পারলে তুমি কী করো?",
-            "কেউ তোমার আইডিয়া চুরি করলে তুমি কী করো?",
+            "কেউ তোমার আইডিয়া চুরি করলে тумি কী করো?",
             "মতামত দিতে গেলে তুমি কী করো?",
             "নতুন জায়গায় বসতে গেলে তুমি কোথায় বসো?",
             "বন্ধু মন খারাপ করলে তুমি কী করো?",
@@ -592,12 +794,12 @@ Be thorough, caring, and creative. The final output should make the user feel un
             "তোমার স্বপ্ন পূরণ হলে তুমি কী করো?",
             "নতুন প্রযুক্তি এলে তুমি কী করো?",
             "কেউ দোষারোপ করলে তুমি কী করো?",
-            "বন্ধুর পরামর্শ পেলে তুমি কী করো?",
+            "বন্ধুর পরামর্শ পেলে тумি কী করো?",
             "পরিকল্পনা ব্যর্থ হলে তুমি কী করো?",
             "পার্টি আয়োজনের সময় তুমি কী করো?",
             "ভবিষ্যৎ পরিকল্পনা করার সময় তুমি কী করো?",
             "কেউ ভুল বললে তুমি কী করো?",
-            "কাজ শেষ হলে পুরস্কার পেলে তুমি কী করো?",
+            "কাজ শেষ হলে পুরস্কار পেলে тумি কী করো?",
             "পরীক্ষার পরে তুমি কী করো?",
             "তোমার শখ করলে তুমি কী করো?",
             "অজানা ফোন পেলে তুমি কী করো?",
@@ -628,7 +830,6 @@ Be thorough, caring, and creative. The final output should make the user feel un
             "সবার উপেক্ষা করলে তুমি কী করো?"
         ];
 
-
         // অপশন ডেটা
         const OPTIONS = [
             ["A) সবার সাথে পরিচয় করি", "B) চুপচাপ পর্যবেক্ষণ করি", "C) এক-দুজনের সাথে মিশে যাই"],
@@ -636,101 +837,101 @@ Be thorough, caring, and creative. The final output should make the user feel un
             ["A) গল্প চালাই", "B) সবাই যা বলে তাতেই হাসি", "C) শুনি, মাঝেমধ্যে বলি"],
             ["A) আমি লিডার হব", "B) আমি অন্যের সাথে কাজ করব", "C) আমি আলাদা নিজের মত করব"],
             ["A) সাহস দেখাই", "B) অন্যকে ডাকি", "C) চুপচাপ নিজে সামলাই"],
-            ["A) আনন্দ উপভোগ করি", "B) চাপ লাগে", "C) দূর থেকে দেখি"],
-            ["A) মাঝে দাঁড়াই", "B) যেখানে জায়গা পাই দাঁড়াই", "C) পেছনে থাকি"],
-            ["A) সমাধান করি", "B) এড়িয়ে যাই", "C) চুপচাপ দেখি"],
-            ["A) ঝাঁপিয়ে পড়ি", "B) অন্যদের জিজ্ঞেস করি", "C) ভেবে নিই"],
+            ["A) আনন্দ উপভোগ করি", "B) চাপ লাগে", "C) দূর থেকে দেখi"],
+            ["A) মাঝে দাঁড়াই", "B) যেখানে জায়গা পাই দাঁড়াই", "C) পেছনে থাকi"],
+            ["A) সমাধান করi", "B) এড়িয়ে যাই", "C) চুপচাপ দেখi"],
+            ["A) ঝাঁপিয়ে পড়i", "B) অন্যদের জিজ্ঞেস করi", "C) ভেবে নিই"],
             ["A) বিরক্ত লাগে", "B) একটু লাগে", "C) খুব ভালো লাগে"],
             ["A) জোর দিয়ে বোঝাই", "B) রাগ করি না", "C) আর বলি না"],
-            ["A) সাথে সাথে শুরু করি", "B) ধীরে ধীরে করি", "C) নিজের গোপনে করি"],
-            ["A) মজা পাই", "B) নার্ভাস লাগে", "C) দরকার হলে করি"],
-            ["A) সবাইকে নিয়ন্ত্রণ করি", "B) পাশে বসি", "C) একা কোণায় থাকি"],
-            ["A) সাথে সাথে জবাব দিই", "B) চুপ থাকি", "C) একদিন ফিরিয়ে দিই"],
-            ["A) আগে গিয়ে কথা বলি", "B) বন্ধুর সাথে পাঠাই", "C) সে নিজে আসলে বলি"],
-            ["A) আমি ভাগ করে দিই", "B) আমাকে যা দেয় করি", "C) আলাদা নিজের কাজ করি"],
-            ["A) কখনো ভাঙি", "B) সব মানি", "C) দরকার হলে মানি"],
-            ["A) আমি হব", "B) অন্যকে দিই", "C) খেলি কিন্তু লিড করি না"],
-            ["A) সমাধান খুঁজি", "B) সাহায্য চাই", "C) একা লড়ি"],
-            ["A) নতুন কিছু চেষ্টা করি", "B) সবাই যা নেয় তাই নেই", "C) আগেই পড়ে নিই মেনু"],
-            ["A) জবাব দিই", "B) চুপ থাকি", "C) মনে মনে ভাবি"],
-            ["A) পরিকল্পনা করি", "B) যেটা বলে তাতে যাই", "C) নিজের মত চলি"],
-            ["A) আত্মবিশ্বাসী থাকি", "B) ভয় লাগে", "C) শান্ত থাকি"],
-            ["A) ঠিক করি সাথে সাথে", "B) অন্যকে বলি", "C) চুপচাপ সামলাই"],
+            ["A) সাথে সাথে শুরু করi", "B) ধীরে ধীরে করi", "C) নিজের গোপনে করi"],
+            ["A) মজা পাই", "B) নার্ভাস লাগে", "C) দরকার হলে করi"],
+            ["A) সবাইকে নিয়ন্ত্রণ করi", "B) পাশে বসi", "C) একা কোণায় থাকi"],
+            ["A) সাথে সাথে জবাব দিই", "B) চুপ থাকi", "C) একদিন ফিরিয়ে দিই"],
+            ["A) আগে গিয়ে কথা বলi", "B) বন্ধুর সাথে পাঠাই", "C) সে নিজে আসলে বলi"],
+            ["A) আমি ভাগ করে দিই", "B) আমাকে যা দেয় করi", "C) আলাদা নিজের কাজ করi"],
+            ["A) কখনো ভাঙi", "B) সব মানi", "C) দরকার হলে মানi"],
+            ["A) আমি হব", "B) অন্যকে দিই", "C) खেলি কিন্তু লিড করি না"],
+            ["A) समाधान খুঁজি", "B) সাহায্য চাই", "C) একা লড়ি"],
+            ["A) নতুন কিছু চেষ্টা করi", "B) সবাই যা নেয় তাই নেই", "C) আগেই পড়ে নিই মেনু"],
+            ["A) জবাব দিই", "B) চুপ থাকi", "C) মনে মনে ভাবi"],
+            ["A) পরিকল্পনা করi", "B) যেটা বলে তাতে যাই", "C) নিজের মত চলi"],
+            ["A) আত্মবিশ্বাসী থাকi", "B) ভয় লাগে", "C) শান্ত থাকi"],
+            ["A) ঠিক করi সাথে সাথে", "B) অন্যকে বলi", "C) চুপচাপ সামলাই"],
             ["A) আগে যাই", "B) সবার সাথে যাই", "C) মেজাজ অনুযায়ী যাই"],
-            ["A) আমি শুরু করি", "B) অপেক্ষা করি", "C) ছোট উত্তর দিই"],
+            ["A) আমি শুরু করi", "B) অপেক্ষা করi", "C) ছোট উত্তর দিই"],
             ["A) গান গাই", "B) তালি দিই", "C) দেখি শুধু"],
-            ["A) সবাইকে বলি", "B) জিজ্ঞেস করি", "C) নিজে খোঁজি"],
-            ["A) সমাধান করি", "B) নিরপেক্ষ থাকি", "C) বলি “আমায় দিও না”"],
-            ["A) পরের বার বেশি পড়ি", "B) মন খারাপ করি", "C) চুপচাপ থাকি"],
-            ["A) নিয়ম বানাই", "B) সবাইকে শুনি", "C) শুধু নিজের কাজ করি"],
-            ["A) সবাইকে দেখাই", "B) পরিবারকে দেখাই", "C) একা ব্যবহার করি"],
-            ["A) গান চালাই", "B) টিভি দেখি", "C) বই পড়ি"],
-            ["A) অভিযোগ করি", "B) কিছু বলি না", "C) অন্য কাজ করি"],
-            ["A) আবার বুঝাই", "B) মেনে নেই", "C) পরে প্রমাণ করি"],
-            ["A) প্রতিযোগিতা করি", "B) আনন্দ করি", "C) নিজের জন্য খেলি"],
-            ["A) গ্রহণ করি", "B) বলি “আরেকজন নাও”", "C) করি কিন্তু অতিরিক্ত কথা বলি না"],
-            ["A) মানুষকে নেতৃত্ব দেই", "B) বন্ধুদের সাথে থাকি", "C) একা কাজ করি"],
-            ["A) সাহায্য করি", "B) অন্যকে ডাকি", "C) দূরে দাঁড়াই"],
-            ["A) আলোচনা চালাই", "B) মিম পাঠাই", "C) শুধু পড়ি"],
-            ["A) সবাইকে বলি", "B) বন্ধুকে বলি", "C) একা চেষ্টা করি"],
-            ["A) খুঁজে বের করি", "B) সাহায্য চাই", "C) অন্য কিছু ব্যবহার করি"],
-            ["A) জিততেই হবে", "B) খেলায় আনন্দ পাই", "C) অনুসন্ধান করি"],
-            ["A) মানি না", "B) মানি", "C) চুপচাপ করি"],
-            ["A) গ্রুপে যাই", "B) বন্ধুর সাথে যাই", "C) একা যেতেও পারি"],
-            ["A) খুশি হই", "B) ভয়ে যাই", "C) শান্ত থাকি"],
-            ["A) রক্ষা করি", "B) চুপ থাকি", "C) পরে উন্নতি করি"],
-            ["A) সবাইকে বলি", "B) চুপচাপ বসি", "C) নিজের মনে খুশি হই"],
-            ["A) আমি শুরু করি", "B) অন্যকে দিই", "C) আমার অংশ টুকু করি"],
-            ["A) জেদ করি", "B) মেনে নিই", "C) অপেক্ষা করি"],
-            ["A) অবশ্যই", "B) ভয় লাগে", "C) মেজাজ অনুযায়ী করি"],
-            ["A) প্রতিবাদ করি", "B) চুপ থাকি", "C) পরে প্রমাণ করি"],
-            ["A) জোরে বলি", "B) ধীরে বলি", "C) দরকার হলে বলি"],
-            ["A) সামনে বসি", "B) মাঝখানে বসি", "C) পেছনে বসি"],
-            ["A) সান্ত্বনা দিই", "B) সঙ্গে থাকি", "C) কিছু না বলি"],
-            ["A) গ্রহণ করি", "B) এড়িয়ে চলি", "C) পরে চেষ্টা করি"],
-            ["A) সবার সাথে ভাগ করি", "B) বন্ধুর সাথে বলি", "C) একা রাখি"],
-            ["A) বিতর্ক করি", "B) সমঝোতা করি", "C) চুপ থাকি"],
-            ["A) সবাইকে উৎসাহিত করি", "B) শুনে খুশি হই", "C) একা জানি"],
-            ["A) তালি দিই", "B) সমর্থন করি", "C) চুপচাপ শ্রদ্ধা করি"],
-            ["A) গ্রহণ করি", "B) আলোচনা করি", "C) গবেষণা করি"],
-            ["A) জিততে চাই", "B) শুধু যাই", "C) শুধু শুনি"],
-            ["A) সবাইকে বলি", "B) পরিবারকে বলি", "C) একা খুশি হই"],
-            ["A) ব্যবহার করি", "B) সময় নিয়ে শিখি", "C) একা শিখি"],
-            ["A) রক্ষা করি", "B) চুপ থাকি", "C) উপেক্ষা করি"],
-            ["A) মানি না", "B) বিবেচনা করি", "C) পরে ভেবে দেখি"],
-            ["A) আবার চেষ্টা করি", "B) হতাশ হই", "C) অন্য পরিকল্পনা করি"],
-            ["A) সংগঠিত করি", "B) সাহায্য করি", "C) চুপচাপ উপভোগ করি"],
-            ["A) বড় ভাবি", "B) পরিবারে নির্ভর করি", "C) নিজের মতো ভাবি"],
-            ["A) প্রতিবাদ করি", "B) মেনে নিই", "C) পরে প্রমাণ করি"],
+            ["A) সবাইকে বলi", "B) জিজ্ঞেস করi", "C) নিজে খোঁজi"],
+            ["A) সমাধান করi", "B) নিরপেক্ষ থাকi", "C) বলি “আমায় দিও না”"],
+            ["A) পরের বার বেশি পড়i", "B) মন খারাপ করi", "C) চুপচাপ থাকi"],
+            ["A) নিয়ম বানাই", "B) সবাইকে শুনi", "C) শুধু নিজের কাজ করi"],
+            ["A) সবাইকে দেখাই", "B) পরিবারকে দেখাই", "C) একা ব্যবহার করi"],
+            ["A) গান চালাই", "B) টিভি দেখi", "C) বই পড়i"],
+            ["A) অভিযোগ করi", "B) কিছু বলi না", "C) অন্য কাজ করi"],
+            ["A) আবার বুঝাই", "B) মেনে নেই", "C) পরে প্রমাণ করi"],
+            ["A) প্রতিযোগিতা করi", "B) আনন্দ করi", "C) নিজের জন্য খেলi"],
+            ["A) গ্রহণ করi", "B) বলi “আরেকজন নাও”", "C) করি কিন্তু অতিরিক্ত কথা বলি না"],
+            ["A) মানুষকে নেতৃত্ব দেই", "B) বন্ধুদের সাথে থাকi", "C) একা কাজ করi"],
+            ["A) সাহায্য করi", "B) অন্যকে ডাকi", "C) দূরে দাঁড়াই"],
+            ["A) আলোচনা চালাই", "B) মিম পাঠাই", "C) শুধু পড়i"],
+            ["A) সবাইকে বলi", "B) বন্ধুকে বলi", "C) একা চেষ্টা করi"],
+            ["A) খুঁজে বের করi", "B) সাহায্য চাই", "C) অন্য কিছু ব্যবহার করi"],
+            ["A) জিততেই হবে", "B) খেলায় আনন্দ পাই", "C) অনুসন্ধান করi"],
+            ["A) মানি না", "B) মানi", "C) চুপচাপ করi"],
+            ["A) গ্রুপে যাই", "B) বন্ধুর সাথে যাই", "C) একা যেতেও পারi"],
+            ["A) খুশি হই", "B) ভয়ে যাই", "C) শান্ত থাকi"],
+            ["A) রক্ষা করi", "B) চুপ থাকi", "C) পরে উন্নতি করi"],
+            ["A) সবাইকে বলi", "B) চুপচাপ বসi", "C) নিজের মনে খুশি হই"],
+            ["A) আমি শুরু করi", "B) অন্যকে দিই", "C) আমার অংশ টুকু করi"],
+            ["A) জেদ করi", "B) মেনে নিই", "C) অপেক্ষা করi"],
+            ["A) অবশ্যই", "B) ভয় লাগে", "C) মেজাজ অনুযায়ী করi"],
+            ["A) প্রতিবাদ করi", "B) चुप থাকi", "C) পরে প্রমাণ করi"],
+            ["A) জোরে বলi", "B) ধীরে বলi", "C) দরকার হলে বলi"],
+            ["A) সামনে বসi", "B) মাঝখানে বসi", "C) পেছনে বসi"],
+            ["A) সান্ত্বনা দিই", "B) সঙ্গে থাকi", "C) কিছু না বলi"],
+            ["A) গ্রহণ করi", "B) এড়িয়ে চলi", "C) পরে চেষ্টা করi"],
+            ["A) সবার সাথে ভাগ করi", "B) বন্ধুর সাথে বলi", "C) একা রাখi"],
+            ["A) বিতর্ক করi", "B) সমঝোতা করi", "C) চুপ থাকi"],
+            ["A) সবাইকে উৎসাহিত করi", "B) শুনে খুশি হই", "C) একা জানi"],
+            ["A) তালি দিই", "B) সমর্থন করi", "C) চুপচাপ শ্রদ্ধা করi"],
+            ["A) গ্রহণ করi", "B) আলোচনা করi", "C) গবেষণা করi"],
+            ["A) জিততে চাই", "B) শুধু যাই", "C) শুধু শুনi"],
+            ["A) সবাইকে বলi", "B) পরিবারকে বলi", "C) একা খুशি হই"],
+            ["A) ব্যবহার করi", "B) সময় নিয়ে শিখi", "C) একা শিখi"],
+            ["A) রক্ষা করi", "B) চুপ থাকi", "C) উপেক্ষা করi"],
+            ["A) মানi না", "B) বিবেচনা করi", "C) পরে ভেবে দেখi"],
+            ["A) আবার চেষ্টা করi", "B) হতাশ হই", "C) অন্য পরিকল্পনা করi"],
+            ["A) সংগঠিত করi", "B) সাহায্য করi", "C) চুপচাপ উপভোগ করi"],
+            ["A) বড় ভাবi", "B) পরিবারে নির্ভর করi", "C) নিজের মতো ভাবi"],
+            ["A) প্রতিবাদ করi", "B) মেনে নিই", "C) পরে प्रমाण করi"],
             ["A) চাই", "B) চাই না", "C) নিজের খুশির পুরস্কার"],
-            ["A) সবাইকে জিজ্ঞেস করি", "B) ফলাফলের অপেক্ষা করি", "C) চুপচাপ থাকি"],
-            ["A) সাহসিকতা করি", "B) বন্ধুর সাথে দেখা করি", "C) একা অনুসন্ধান করি"],
+            ["A) সবাইকে জিজ্ঞেস করi", "B) ফলাফলের অপেক্ষা করi", "C) চুপচাপ থাকi"],
+            ["A) সাহসিকতা করi", "B) বন্ধুর সাথে দেখা করi", "C) একা অনুসন্ধান করi"],
             ["A) সাথে সাথে", "B) ভয় ভয় করে", "C) না ধরলেও চলে"],
-            ["A) নেতৃত্ব দেই", "B) সঙ্গে মিশি", "C) দূর থেকে শ্রদ্ধা করি"],
-            ["A) ক্ষমা চাই", "B) দুঃখ প্রকাশ করি", "C) কিছু বলি না"],
-            ["A) সবাইকে প্রেরণা দেই", "B) উদযাপন করি", "C) নিজে খুশি হই"],
-            ["A) মজা করি", "B) বসে থাকি", "C) নিজের চিন্তা করি"],
+            ["A) নেতৃত্ব দেই", "B) সঙ্গে মিশi", "C) দূর থেকে শ্রদ্ধা করi"],
+            ["A) ক্ষমা চাই", "B) দুঃখ প্রকাশ করi", "C) কিছু বলi না"],
+            ["A) সবাইকে প্রেরণা দেই", "B) উদযাপন করi", "C) নিজে খুশি হই"],
+            ["A) মজা করi", "B) বসে থাকi", "C) নিজের চিন্তা করi"],
             ["A) নেতা", "B) সহযোগী", "C) নীরব"],
             ["A) সাহসী", "B) স্বাভাবিক", "C) সহজ"],
-            ["A) প্রকাশ করি", "B) নরমভাবে দিই", "C) না দিলে ভালো"],
+            ["A) প্রকাশ করi", "B) নরমভাবে দিই", "C) না দিলে ভালো"],
             ["A) বড়", "B) উপস্থিত", "C) গভীর"],
             ["A) সবসময়", "B) মাঝে মাঝে", "C) সতর্ক"],
             ["A) জোরে", "B) নরম", "C) সংক্ষেপে"],
             ["A) দ্রুত", "B) স্থিরভাবে", "C) নিজের মতো"],
-            ["A) দেখাই", "B) চাপা রাখি", "C) ভিতরে রাখি"],
+            ["A) দেখাই", "B) চাপা রাখi", "C) ভিতরে রাখi"],
             ["A) বড় কিছু", "B) সাধারণ জীবন", "C) স্বাধীন থাকা"],
             ["A) সবাইকে দেখানো", "B) নিজের জন্য", "C) সবার থেকে আলাদা"],
-            ["A) সামলাই", "B) ভেঙে যাই", "C) উপেক্ষা করি"],
-            ["A) প্রভাব বিস্তার করি", "B) অনুসরণ করি", "C) স্বাধীন থাকি"],
-            ["A) সাথে সাথে", "B) পরিবারের পরামর্শ নেই", "C) একা ভেবে করি"],
-            ["A) মোকাবিলা করি", "B) সাহায্য চাই", "C) উপেক্ষা করি"],
-            ["A) জোর করি", "B) ছেড়ে দিই", "C) আর চেষ্টা করি না"],
+            ["A) সামলাই", "B) ভেঙে যাই", "C) উপেক্ষা করi"],
+            ["A) প্রভাব বিস্তার করi", "B) অনুসরণ করi", "C) স্বাধীন থাকi"],
+            ["A) সাথে সাথে", "B) পরিবারের পরামর্শ নেই", "C) একা ভেবে করi"],
+            ["A) মোকাবিলা করi", "B) সাহায্য চাই", "C) উপেক্ষা করi"],
+            ["A) জোর করi", "B) ছেড়ে দিই", "C) আর চেষ্টা করi না"],
             ["A) সবসময়", "B) মাঝে মাঝে", "C) না"],
-            ["A) স্বীকার করি", "B) লুকাই", "C) নিজে সামলাই"],
+            ["A) স্বীকার করi", "B) লুকাই", "C) নিজে সামলাই"],
             ["A) আগে থেকে", "B) সাথে সাথে", "C) মেজাজ অনুযায়ী"],
-            ["A) সবাইকে বলি", "B) বন্ধুকে বলি", "C) একা থাকি"],
+            ["A) সবাইকে বলi", "B) বন্ধুকে বলi", "C) একা থাকi"],
             ["A) না", "B) হ্যাঁ", "C) দরকার হলে"],
-            ["A) পাত্তা দিই না", "B) খারাপ লাগে", "C) মনে মনে হাসি"]
+            ["A) পাত্তা দিই না", "B) খারাপ লাগে", "C) মনে মনে হাসi"]
         ];
 
         // DOM elements
@@ -741,6 +942,36 @@ Be thorough, caring, and creative. The final output should make the user feel un
         const copyJsonBtn = document.getElementById("copyJsonBtn");
         const scrollTopBtn = document.getElementById("scrollTop");
         const usernameInput = document.getElementById("username");
+        const navTabs = document.querySelectorAll(".nav-tab");
+        const sections = document.querySelectorAll(".section");
+
+        // Navigation functionality
+        navTabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                const target = tab.getAttribute("data-target");
+
+                // Update active tab
+                navTabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+
+                // Show target section
+                sections.forEach(section => {
+                    section.classList.remove("active");
+                    if (section.id === target) {
+                        section.classList.add("active");
+                    }
+                });
+
+                // হেডার পরিবর্তন
+                if (target === 'feedback-section') {
+                    document.getElementById('quiz-header').style.display = 'none';
+                    document.getElementById('feedback-header').style.display = 'block';
+                } else {
+                    document.getElementById('quiz-header').style.display = 'block';
+                    document.getElementById('feedback-header').style.display = 'none';
+                }
+            });
+        });
 
         // প্রশ্ন রেন্ডার করুন
         function renderQuestions() {
@@ -848,12 +1079,12 @@ Be thorough, caring, and creative. The final output should make the user feel un
                 // Check if any option is selected
                 ["a", "b", "c"].forEach((option) => {
                     const checkbox = document.getElementById(`q${index}${option}`);
-                    if (checkbox.checked) hasSelection = true;
+                    if (checkbox && checkbox.checked) hasSelection = true;
                 });
 
                 // Check if note has content
                 const note = document.getElementById(`note${index}`);
-                if (note.value.trim().length > 0) hasNote = true;
+                if (note && note.value.trim().length > 0) hasNote = true;
 
                 if (hasSelection || hasNote) completed++;
             });
@@ -880,7 +1111,7 @@ Be thorough, caring, and creative. The final output should make the user feel un
                     const checkbox = document.getElementById(
                         `q${index}${option.toLowerCase()}`
                     );
-                    if (checkbox.checked) {
+                    if (checkbox && checkbox.checked) {
                         answer.answers.push({
                             option: option,
                             text: checkbox.nextElementSibling.textContent,
